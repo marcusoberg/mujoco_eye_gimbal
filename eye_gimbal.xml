@@ -1,0 +1,72 @@
+<mujoco model="eye_gimbal">
+  <compiler angle="degree" autolimits="true"/>
+  <option timestep="0.001" integrator="implicitfast" gravity="0 0 -9.81"/>
+
+  <visual>
+    <global azimuth="135" elevation="-18" offwidth="640" offheight="480"/>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.65 0.65 0.65" specular="0.2 0.2 0.2"/>
+  </visual>
+
+  <default>
+    <geom contype="0" conaffinity="0"/>
+    <joint damping="0.0015" armature="0.00002"/>
+  </default>
+
+  <worldbody>
+    <light pos="0 0 4" dir="0 0 -1"/>
+    <geom name="floor" type="plane" size="5 5 0.1" rgba="0.18 0.18 0.20 1" contype="1" conaffinity="1"/>
+
+    <!-- Front target wall, centered on the neutral +X gaze axis. -->
+    <geom name="target_wall" type="box" pos="3.5 0 1.2" size="0.03 1.8 1.05" rgba="0.78 0.78 0.80 1"/>
+    <geom type="sphere" pos="3.44 0 1.2" size="0.06" rgba="0.9 0.15 0.15 1"/>
+    <geom type="sphere" pos="3.44 1.05 1.2" size="0.045" rgba="0.15 0.35 0.9 1"/>
+    <geom type="sphere" pos="3.44 -1.05 1.2" size="0.045" rgba="0.15 0.35 0.9 1"/>
+    <geom type="sphere" pos="3.44 0 1.85" size="0.045" rgba="0.15 0.7 0.25 1"/>
+    <geom type="sphere" pos="3.44 0 0.55" size="0.045" rgba="0.15 0.7 0.25 1"/>
+
+    <!--
+      The head_base is a mocap body. In the demo we rotate it with keys to mimic
+      head/body motion. The gimbal controller uses its attitude as the IMU attitude.
+    -->
+    <body name="head_base" mocap="true" pos="0 0 1.2">
+      <geom type="box" size="0.10 0.12 0.09" rgba="0.25 0.25 0.28 1"/>
+      <site name="imu_site" pos="0 0 0" size="0.012" rgba="1 0.7 0.1 1"/>
+
+      <!-- All three hinge axes pass through local position 0 0 0. -->
+      <body name="yaw_frame" pos="0 0 0">
+        <joint name="yaw_joint" type="hinge" pos="0 0 0" axis="0 0 1" range="-50 50"/>
+        <geom type="cylinder" size="0.073 0.009" mass="0.010" rgba="0.20 0.55 0.85 0.65"/>
+
+        <body name="pitch_frame" pos="0 0 0">
+          <!-- axis -Y makes positive pitch point the +X optical axis upward (+Z). -->
+          <joint name="pitch_joint" type="hinge" pos="0 0 0" axis="0 -1 0" range="-40 40"/>
+          <geom type="capsule" fromto="0 -0.082 0  0 0.082 0" size="0.008" mass="0.008" rgba="0.25 0.80 0.45 0.75"/>
+
+          <body name="eye" pos="0 0 0">
+            <joint name="roll_joint" type="hinge" pos="0 0 0" axis="1 0 0" range="-35 35"/>
+
+            <!-- Approximate camera/eye payload. -->
+            <geom type="sphere" size="0.032" mass="0.030" rgba="0.92 0.92 0.95 1"/>
+            <geom type="capsule" fromto="0 0 0  0.18 0 0" size="0.004" mass="0.002" rgba="0.95 0.25 0.20 0.9"/>
+            <geom type="sphere" pos="0.19 0 0" size="0.011" mass="0.001" rgba="0.95 0.25 0.20 1"/>
+
+            <!-- MuJoCo cameras look down local -Z. This quaternion makes it look along body +X with +Z as image-up. -->
+            <camera name="eye_cam" pos="0 0 0" quat="0.5 0.5 -0.5 -0.5" fovy="70"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="yaw_servo" joint="yaw_joint" kp="0.12" kv="0.004" inheritrange="1" forcerange="-0.035 0.035"/>
+    <position name="pitch_servo" joint="pitch_joint" kp="0.12" kv="0.004" inheritrange="1" forcerange="-0.035 0.035"/>
+    <position name="roll_servo" joint="roll_joint" kp="0.10" kv="0.004" inheritrange="1" forcerange="-0.030 0.030"/>
+  </actuator>
+
+  <sensor>
+    <!-- These are here so the model contains realistic IMU signals. The demo uses exact simulated base attitude for the attitude estimate. -->
+    <gyro name="imu_gyro" site="imu_site"/>
+    <accelerometer name="imu_accel" site="imu_site"/>
+  </sensor>
+</mujoco>
