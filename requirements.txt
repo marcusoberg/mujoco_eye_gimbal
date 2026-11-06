@@ -1,2 +1,4 @@
 mujoco>=3.3
-numpy>=1.26
+numpy 
+glfw 
+opencv-python

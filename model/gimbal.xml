@@ -1,0 +1,24 @@
+<mujoco model="three_axis_gimbal">
+  <compiler angle="degree" autolimits="true"/>
+  <default>
+    <joint damping="0.006" armature="0.0001"/>
+    <geom contype="0" conaffinity="0"/>
+  </default>
+
+  <worldbody>
+    <body name="mount">
+      <geom type="cylinder" pos="0 0 -0.055" size="0.065 0.022"
+            rgba="0.22 0.25 0.29 1"/>
+      <include file="parts/yaw.xml"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="yaw_servo" joint="yaw_joint" kp="0.8" kv="0.07"
+              inheritrange="1" forcerange="-0.5 0.5"/>
+    <position name="pitch_servo" joint="pitch_joint" kp="0.8" kv="0.07"
+              inheritrange="1" forcerange="-0.5 0.5"/>
+    <position name="roll_servo" joint="roll_joint" kp="0.7" kv="0.06"
+              inheritrange="1" forcerange="-0.4 0.4"/>
+  </actuator>
+</mujoco>

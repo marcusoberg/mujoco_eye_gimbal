@@ -1,0 +1,10 @@
+<mujoco>
+  <body name="roll_frame">
+    <joint name="roll_joint" type="hinge" axis="1 0 0" range="-35 35"/>
+    <inertial pos="0 0 0" mass="0.06" diaginertia="0.00015 0.0002 0.0002"/>
+    <!-- Cylindrical roll motor coaxial with the camera. -->
+    <geom type="cylinder" pos="0.09 0 0" euler="0 90 0" size="0.055 0.025"
+          rgba="0.76 0.34 0.24 1"/>
+    <include file="parts/camera.xml"/>
+  </body>
+</mujoco>

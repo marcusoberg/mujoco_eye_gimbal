@@ -1,0 +1,12 @@
+<mujoco>
+  <body name="camera_module">
+    <inertial pos="0 0 0" mass="0.11" diaginertia="0.00025 0.00025 0.00025"/>
+    <geom type="box" pos="0.17 0 0" size="0.065 0.05 0.045"
+          rgba="0.78 0.80 0.85 1"/>
+    <geom type="cylinder" pos="0.24 0 0" euler="0 90 0" size="0.028 0.015"
+          rgba="0.09 0.12 0.16 1"/>
+    <geom type="sphere" pos="0.26 0 0" size="0.013" rgba="0.16 0.4 0.8 1"/>
+    <!-- Camera looks along local -Z; remap it to body +X. -->
+    <camera name="eye_cam" pos="0.265 0 0" quat="0.5 0.5 -0.5 -0.5" fovy="70"/>
+  </body>
+</mujoco>

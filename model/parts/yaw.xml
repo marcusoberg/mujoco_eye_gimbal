@@ -1,0 +1,12 @@
+<mujoco>
+  <body name="yaw_frame">
+    <joint name="yaw_joint" type="hinge" axis="0 0 1" range="-50 50"/>
+    <inertial pos="0 0 0" mass="0.09" diaginertia="0.0004 0.0004 0.0004"/>
+    <!-- Yaw motor rotor, main rotating plate and crossbar. -->
+    <geom type="cylinder" pos="0 0 -0.020" size="0.056 0.018"
+          rgba="0.16 0.52 0.82 1"/>
+    <geom type="box" pos="0 0 0.025" size="0.10 0.12 0.018"
+          rgba="0.28 0.35 0.40 1"/>
+    <include file="parts/pitch.xml"/>
+  </body>
+</mujoco>
