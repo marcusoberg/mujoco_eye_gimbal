@@ -1,3 +1,2 @@
-mujoco>=3.2
-pygame>=2.5
+mujoco>=3.3
 numpy>=1.26
